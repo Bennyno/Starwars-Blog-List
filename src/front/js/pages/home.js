@@ -1,26 +1,74 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { Card } from "../component/Cards";
+import { Card2 } from "../component/Cards2";
+import { Card3 } from "../component/Cards3";
+import { Link, useParams } from "react-router-dom";
 
 export const Home = () => {
-	const { store, actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
+  
+  useEffect(() => {
+    actions.getPeople().then(()=> console.log(store.people));
+  }, []);
 
-	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
-			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://github.com/4GeeksAcademy/react-flask-hello/tree/95e0540bd1422249c3004f149825285118594325/docs">
-					Read documentation
-				</a>
-			</p>
-		</div>
-	);
+  useEffect(() => {
+    actions.getPlanets().then(()=> console.log(store.planets));
+  }, []);
+
+  useEffect(() => {
+    actions.getVehicles().then(()=> console.log(store.vehicles));
+  }, []);
+
+  return (
+    <>
+    
+      <h1>
+        <strong>Characters</strong>
+      </h1>
+        <div className="card">
+        {store.people.map((person, index) => {
+            return (
+              <Card key={index}
+                name={person.name}
+                gender={person.gender} 
+                hair_color={person.hair_color}
+                eye_color={person.eye_color}
+                index = {index} />
+            );
+          })}
+        </div>
+        
+      <h1>
+        <strong>Planets</strong>
+      </h1>
+        <div className="card">
+        {store.planets.map((planet, index)=>{
+            return(
+              <Card2 key = {index}
+              name={planet.name}
+              population={planet.population} 
+              terrain={planet.terrain}
+              gravity={planet.gravity}
+              index = {index}/>
+          )})}
+        </div>
+
+        <h1>
+        <strong>Vehicles</strong>
+      </h1>
+        <div className="card">
+        {store.vehicles.map((vehicle, index)=>{
+            return(
+              <Card3 key = {index}
+              name={vehicle.name}
+              model={vehicle.model} 
+              manufacturer={vehicle.manufacturer}
+              vehicle_class={vehicle.vehicle_class}
+              index = {index}/>
+          )})}
+        </div>
+    </>
+  );
 };

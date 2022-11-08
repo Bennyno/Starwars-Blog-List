@@ -5,3 +5,103 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+
+.navbar {
+  color: #fff;
+}
+
+.navbar-brand {
+  margin-right: 400px;
+  color: #fff;
+}
+
+.StarWarsLogo {
+  width: 15%;
+  margin-left: 200px;
+}
+
+div.dropdown {
+  margin-right: 100px;
+}
+
+h1 {
+  margin-left: 3rem;
+  margin-top: 1rem;
+  color: red;
+}
+
+.card-body {
+  padding: 5px;
+  margin: 4px;
+  border: solid 1px lightgray ;
+  width: 30rem;
+}
+.card { 
+  display: flex;
+  width: auto;
+  /* overflow-x: scroll; */
+  /* align-items: stretch; */
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+p {
+  text-transform: capitalize;
+}
+.btn.btn-primary {
+  margin-left: 5px;
+}
+
+.heart {
+  margin-left: 70px;
+  height: 38px;
+  width: 40px;
+  margin-bottom: 10px;
+  color: red;
+  background-color: white;
+  border-color: red;
+  border-radius: 20%;
+}
+
+.heart:focus{
+  /* color: #A00054;
+  border: #A00054 solid 2px; */
+  background:yellow;
+}
+
+.detail {
+  font-size: 40px ;
+}
+
+/*For the learn more individual pages*/
+
+.soloimg {
+  display: block;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
+.display-4 {
+  text-align: center;
+}
+
+.single {
+  text-align: center;
+}
+
+span.btn.btn-primary.btn-lg {
+  display: block;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* p.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position:fixed;
+  bottom:0;
+} */

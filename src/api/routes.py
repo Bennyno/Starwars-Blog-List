@@ -16,3 +16,33 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@api.route('/character')
+def selected_character():
+
+    response_body = {
+        "message": "This is your selected character"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/planet')
+def selected_planet():
+
+    response_body = {
+        "message": "This is your selected planet"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/favorites', methods=['GET'])
+def get_favorites():
+    favorite_query=Favorites.query.all()
+    all_favorites=list(map(lambda x:x.serialize(), favorite_query))
+
+    return jsonify(all_favorites), 200
+
+@api.route('/favorites/<int:id>', methods=['POST'])
+def create_favorite():
+    body=request.json
+    # favorite=
