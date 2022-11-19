@@ -7,21 +7,25 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    # username = db.Column(db.String(250), unique= True, nullable = False)
-    # user_password = db.Column(db.String, nullable=False)
-    favorites = db.relationship("Favorites", back_populates="user")
+    favorites = db.relationship("Favorites", back_populates="user", lazy="dynamic")
+
+    def to_dict(self):
+        return {}
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            # do not serialize the password, its a security breach
+        }
 
 class Favorites(db.Model):
     __tablename__ = 'favorites'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=False, nullable=False)
     user = db.relationship("User", back_populates="favorites")
-    # favorite_planet_id = db.Column(db.Integer, db.ForeignKey("planets.id"))
-    # favorite_planet = db.relationship("Planets")
-    # favorite_character_id = db.Column(db.Integer, db.ForeignKey("people.id"))
-    # favorite_character = db.relationship("People")
-    planet_name = db.Column(db.String, nullable=False)
-    character_name = db.Column(db.String, nullable=False)
+    planet_name = db.Column(db.String, nullable=True)
+    character_name = db.Column(db.String, nullable=True)
 
     def __repr__(self):
         return f'<Favorites {self.id}>'
@@ -54,7 +58,7 @@ class People(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
+            "name": self.name,
             # do not serialize the password, its a security breach
         }
 
@@ -78,7 +82,7 @@ class Planets(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
+            "name": self.name,
             # do not serialize the password, its a security breach
         }
 
