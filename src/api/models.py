@@ -85,14 +85,3 @@ class Planets(db.Model):
             "name": self.name,
             # do not serialize the password, its a security breach
         }
-
-# class Vehicles(db.Model):
-#     __tablename__ = "vehichles"
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(250))
-#     model = db.Column(db.String(250))
-#     manugacturer = db.Column(db.String(250))
-#     cost_in_credits = db.Column(db.Integer)
-#     length = db.Column(db.Integer)
-#     cargo_capacity = db.Column(db.Integer)
-#     vehicle_class = db.Column(db.String(250))

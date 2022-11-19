@@ -17,6 +17,10 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+"""
+Get all users
+"""
+
 @api.route('/users', methods=['GET'])
 def select_allUsers():
     users = User.query.all()
@@ -27,6 +31,11 @@ def select_allUsers():
 
     return jsonify(allUsers), 200
 
+
+"""
+Get single user
+"""
+
 @api.route('/users/<int:id>', methods=['GET'])
 def single_user(id):
     user = User.query.filter_by(id=id).first()
@@ -36,12 +45,23 @@ def single_user(id):
 
     return jsonify(user.serialize()), 200
 
+
+"""
+Get all favorites
+"""
+
+
 @api.route('/favorites', methods=['GET'])
 def get_favorites():
     favorite_query=Favorites.query.all()
     all_favorites=list(map(lambda x:x.serialize(), favorite_query))
 
     return jsonify(all_favorites), 200
+
+
+"""
+Get favorites of a user
+"""
 
 @api.route('/users/favorites/<int:id>', methods=['GET'])
 def user_favorites(id):
@@ -53,7 +73,11 @@ def user_favorites(id):
     return jsonify(user_fav.favorites.serialize()), 200
 
 
-@api.route('/character', methods=['GET'])
+"""
+Get all characters
+"""
+
+@api.route('/people', methods=['GET'])
 def select_allCharacters():
     people = People.query.all()
     allPeople = list(map(lambda character: character.serialize(), people))
@@ -63,7 +87,12 @@ def select_allCharacters():
 
     return jsonify(allPeople), 200
 
-@api.route('/character/<int:id>', methods=['GET'])
+
+"""
+Get single character
+"""
+
+@api.route('/people/<int:id>', methods=['GET'])
 def selected_character(id):
     person = People.query.filter_by(id=id).first()
     response_body = {
@@ -71,6 +100,11 @@ def selected_character(id):
     }
 
     return jsonify(person.serialize()), 200
+
+
+"""
+Get all planets
+"""
 
 @api.route('/planets', methods=['GET'])
 def select_allPlanets():
@@ -82,6 +116,10 @@ def select_allPlanets():
 
     return jsonify(allPlanets), 200
 
+"""
+Get single planet
+"""
+
 @api.route('/planets/<int:id>', methods=['GET'])
 def selected_planet(id):
     planet = Planets.query.filter_by(id=id).first()
@@ -92,30 +130,62 @@ def selected_planet(id):
     return jsonify(planet.serialize()), 200
 
 """
-Post people and planets into the favorites list
+Add new character
 """
 
-@api.route('/favorite/planet/<int:id>', methods=['POST'])
+@api.route('/people/<int:id>', methods=['POST'])
+def add_people(id):    
+    new = request.get_json()
+    new_person = People(id=id, name=new["name"])
+    db.session.add(new_person)
+    db.session.commit()
+
+    return jsonify("A new person was added."), 200
+
+"""
+Add new planet
+"""
+
+@api.route('/planets/<int:id>', methods=['POST'])
+def add_planet(id):    
+    new = request.get_json()
+    new_planet = Planets(id=id, name=new["name"])
+    db.session.add(new_planet)
+    db.session.commit()
+
+    return jsonify("A new planet was added."), 200
+
+
+"""
+Add new character to favorites list
+"""
+
+@api.route('/favorites/people/<int:id>', methods=['POST'])
+def add_favorite_people(id):    
+    new = request.get_json()
+    new_favorite_person = Favorites(user_id=id, character_name=new["character_name"],  planet_name=None)
+    db.session.add(new_favorite_person)
+    db.session.commit()
+
+    return jsonify("A new person was added to favorites."), 200
+
+"""
+Add new planet to favorites list
+"""
+
+@api.route('/favorites/planets/<int:id>', methods=['POST'])
 def add_favorite_planet(id):    
     new = request.get_json()
     new_favorite_planet = Favorites(user_id=id, planet_name=new["planet_name"], character_name=None)
     db.session.add(new_favorite_planet)
     db.session.commit()
 
-    return jsonify("A new planet was added."), 200
+    return jsonify("A new planet was added to favorites."), 200
 
-@api.route('/favorite/people/<int:id>', methods=['POST'])
-def add_favorite_people(id):    
-    new = request.get_json()
-    new_favorite_person = Favorites(user_id=id, planet_name=None, character_name=new["character_name"])
-    db.session.add(new_favorite_person)
-    db.session.commit()
 
-    return jsonify("A new person was added."), 200
-    
 """
-Delete people and planets directly
-"""
+Delete character directly from characters
+"""    
 
 @api.route('/people/<int:id>', methods=['DELETE'])
 def delete_people(id):
@@ -127,10 +197,14 @@ def delete_people(id):
     else:
         db.session.delete(deleted_person)
         db.session.commit()
-        return jsonify("Person was deleted"), 200 
+        return jsonify("Person was deleted."), 200 
 
-@api.route('planet/<int:id>', methods=['DELETE'])
-def delete_favorite_planet(id):
+"""
+Delete planet directly from planets
+"""    
+
+@api.route('planets/<int:id>', methods=['DELETE'])
+def delete_planet(id):
     deleted_planet = Planets.query.get(id)
     if deleted_planet == None:
         return("This planet does not exist."), 200
@@ -139,13 +213,13 @@ def delete_favorite_planet(id):
     else:
         db.session.delete(deleted_planet)
         db.session.commit()
-        return jsonify("Planet was deleted"), 200 
+        return jsonify("Planet was deleted."), 200 
 
 """
-Delete people and planets from favorites list
-"""
+Delete character from favorites list
+"""    
 
-@api.route('/favorite/people/<int:id>', methods=['DELETE'])
+@api.route('/favorites/people/<int:id>', methods=['DELETE'])
 def delete_favorite_people(id):
     deleted_person = Favorites.query.get(id)
     if deleted_person == None:
@@ -155,9 +229,13 @@ def delete_favorite_people(id):
     else:
         db.session.delete(deleted_person)
         db.session.commit()
-        return jsonify("Person was deleted"), 200    
+        return jsonify("Person was deleted from favorites."), 200    
 
-@api.route('/favorite/planet/<int:id>', methods=['DELETE'])
+"""
+Delete planet from favorites list
+"""    
+
+@api.route('/favorites/planets/<int:id>', methods=['DELETE'])
 def delete_favorite_planet(id):
     deleted_planet = Favorites.query.get(id)
     if deleted_planet == None:
@@ -167,4 +245,4 @@ def delete_favorite_planet(id):
     else:
         db.session.delete(deleted_planet)
         db.session.commit()
-        return jsonify("Planet was deleted"), 200 
+        return jsonify("Planet was deleted from favorites."), 200 
